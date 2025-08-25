@@ -1,3 +1,7 @@
+/* ===========
+  CSS RESET
+=========== */
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -8,10 +12,21 @@ body, html {
   height: 100%;
 }
 
+/* ==============
+  CUSTOM STYLES
+============== */
+
+:root {
+  --primary1-color: gold;
+  --accent1-color: rgba(247, 229, 130, 0.76);
+  --primary2-color: green;
+  --accent2-color: rgba(130, 247, 134, 0.76)
+}
+
 body {
   cursor: url('./assets/cursor-norm.png') , auto;
 }
 
 a, button {
-  cursor: url('./assets/cursor-point.png') ,pointer ;
+  cursor: url('./assets/cursor-point.png') ,pointer !important;
 }
