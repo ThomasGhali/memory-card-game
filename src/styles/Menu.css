@@ -1,0 +1,57 @@
+.container {
+  background-image: url("../assets/background.png");
+  height: 100vh;
+  background-position: bottom;
+  background-size: cover;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+}
+
+.menu-window {
+  outline: 1px solid red;
+  width: 400px;
+  height: 500px;
+}
+
+.yugi-container {
+  width: 550px;
+  height: 600px;
+  position: relative;
+  perspective: 1000px;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.yugi {
+  height: 500px;
+  z-index: 100;
+  transform: translateY(0);
+  transition: transform .3s ease-in-out;
+}
+.yugi:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 4px rgb(213, 199, 71));
+}
+
+.ori {
+  width: 400px;
+  position: absolute;
+  filter: drop-shadow( 0 0 15px green);
+  bottom: -90px;
+  left: 50%;
+  animation: spin 6s linear infinite;
+  z-index: -1;
+}
+
+@keyframes spin {
+  from {
+    transform: translateX(-50%) rotateX(75deg) rotateZ(0deg);
+  }
+  to {
+    transform: translateX(-50%) rotateX(75deg) rotateZ(360deg);
+  }
+}
