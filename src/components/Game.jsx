@@ -1,6 +1,7 @@
 import "../styles/Game.css"
 import yugi from "../assets/yugi-normal.png"
 import inGameMessage from "../components/inGameMessage"
+import YugiCard from "./YugiCard"
 
 export default function Game() {
   return (
@@ -27,8 +28,8 @@ export default function Game() {
         </div>
       </header>
 
-      <main className="game-conatiner">
-
+      <main className="game-container">
+        <YugiCard />
       </main>
     </div>
   )
