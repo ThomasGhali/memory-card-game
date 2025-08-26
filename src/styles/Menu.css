@@ -84,10 +84,59 @@
   color: var(--accent1-color);
   font-size: 1.5rem;
   z-index: 100;
+  width: 180px;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.25rem;
+  pointer-events: none;
 }
 
+.level {
+  pointer-events: all;
+  width: 250px;
+}
 
+.level::before,
+.level::after {
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.level::before {
+  content: "◄";
+  transform: translateX(-6px);
+}
+
+.level::after {
+  content: "►";
+  transform: translateX(6px);
+}
+
+.hitbox {
+  position: absolute;
+  outline: 1px solid red;
+  width: 45px;
+  height: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.left-arrow {
+  left: 10%;
+}
+
+.right-arrow {
+  right: 12%;
+}
+
+.menu-btn:hover .level::before,
+.menu-btn:hover .level::after {
+  opacity: 1;
+  transform: translateX(0);
+}
 
 .menu-btn__sub {
   position: absolute;
