@@ -1,5 +1,6 @@
 export default function entranceMessage() {
-  return entranceMessages[Math.floor(Math.random() * 29)];
+  const arrLastIdex = 29
+  return entranceMessages[Math.floor(Math.random() * arrLastIdex)];
 }
 
 const entranceMessages = [

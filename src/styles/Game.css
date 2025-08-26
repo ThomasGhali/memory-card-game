@@ -1,11 +1,84 @@
 /* ======================
   GAME CONTAINER STYLES
 ====================== */
-
-.game-container {
+*{ 
+  outline: 1px solid red;
+}
+.game-wrapper {
   background-image: url("../assets/background.png");
   background-position: bottom;
   object-fit: cover;
   width: 100%;
   height: 100%;
+  padding: 15px;
+}
+
+/* ======================
+  GAME HEADER STYLES
+====================== */
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.yugi-talks {
+  width: 300px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.yugi-talks > img {
+  width: 100px;
+}
+
+.yugi-talks > div {
+  display: inline-block;
+  width: 150px;
+  border: 1px solid var(--primary1-color);
+  border-radius: 3px;
+  color: var(--primary1-color);
+  padding: 5px;
+}
+
+.score {
+  width: 200px;
+  height: 100px;
+  font-size: 1.1rem;
+  border: 1px solid var(--primary1-color);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score__text {
+  font-size: 1.6rem;
+  color: var(--primary1-color);
+}
+
+.score__numbers {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  gap: 15px;
+}
+
+.score__label {
+  font-size: 1.3rem;
+  color: var(--accent1-color);
+}
+
+/* ======================
+  GAME MAIN STYLES
+====================== */
+
+.game-container {
+  width: 100%;
+  height: 500px;
 }

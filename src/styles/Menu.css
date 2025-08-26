@@ -200,7 +200,6 @@
   position: absolute;
   bottom: -90px;
   left: 50%;
-  box-shadow: 0 0 5px var(--primary2-color);
   animation: spin 6s linear infinite;
   transition: filter 0.3s ease-in-out;
   z-index: -1;

@@ -6,6 +6,7 @@ import menu from '../assets/menu.png'
 import menuBtns from '../assets/button.png'
 import entranceMessage from './EntranceMessages'
 import { useEffect, useState } from 'react'
+import { Typewriter } from "react-simple-typewriter";
 
 
 export default function Menu({ gameLevel, setGameLevel, setPage }) {
@@ -74,7 +75,15 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
       <div className="yugi-container">
         <img src={yugi} alt="yugi" className="yugi" />
         <div className="Entrance-message">
-          {message}
+          <Typewriter 
+             words={[message]}
+             loop={1}
+             cursor
+             cursorStyle="_"
+             typeSpeed={40}
+             deleteSpeed={40}
+             delaySpeed={1500}
+          />
         </div>
         <img src={ori} alt="orichalcos ring" className="ori" />
       </div>
