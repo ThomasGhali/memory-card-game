@@ -5,28 +5,47 @@ import ori from '../assets/orichalcos.png'
 import menu from '../assets/menu.png'
 import menuBtns from '../assets/button.png'
 import entranceMessage from './EntranceMessages'
+import { useEffect, useState } from 'react'
 
 
-export default function Menu({ gameLevel, setGameLevel }) {
+export default function Menu({ gameLevel, setGameLevel, setPage }) {
+  // State Variables
+  const [message, setMessage] = useState('');
+
   const currentLevelIndex = gameLevel.order - 1;
-  const levels = [{level: 'Easy', order: 1, text: "Cardboard Chaos"}, {level: 'Mid', order: 2, text: "Deck of Doom"}, {level: 'Hard', order: 3, text: "Ring of Ridiculousness"}]
+  const levels = [
+    { level: 'Easy', order: 1, text: 'Cardboard Chaos' },
+    { level: 'Mid', order: 2, text: 'Deck of Doom' },
+    { level: 'Hard', order: 3, text: 'Ring of Ridiculousness' },
+  ];
   const numberOfLevels = levels.length;
 
+
+
+  // change levels
   function changeLevel(nextLevelIndex) {
-    const newIndex = (currentLevelIndex + nextLevelIndex) % numberOfLevels;
+    const newIndex = (currentLevelIndex + nextLevelIndex + numberOfLevels) % numberOfLevels;
 
     setGameLevel({...levels[newIndex]});
   }
 
+  useEffect(() => {
+    setMessage(entranceMessage());
+  }, [])
+
   return (
-    <div className="container">
+    <div className="menu-container">
       <div className="empty"></div>
       <div className="menu-window">
         <img src={logo} className="logo" />
         <div className="menu-img-wrapper">
           <img src={menu} className="menu-img" />
           <div className="menu-buttons-wrapper">
-            <button aria-label="Start Game" className="menu-btn">
+            <button 
+              aria-label="Start Game" 
+              className="menu-btn"
+              onClick={() => setPage("game")}
+            >
               <img src={menuBtns} aria-hidden="true" />
               <span className="menu-btn__text">Start Game</span>
             </button>
@@ -55,7 +74,7 @@ export default function Menu({ gameLevel, setGameLevel }) {
       <div className="yugi-container">
         <img src={yugi} alt="yugi" className="yugi" />
         <div className="Entrance-message">
-          {entranceMessage()}
+          {message}
         </div>
         <img src={ori} alt="orichalcos ring" className="ori" />
       </div>

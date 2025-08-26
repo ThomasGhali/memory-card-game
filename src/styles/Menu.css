@@ -1,6 +1,6 @@
-.container {
+.menu-container {
   background-image: url("../assets/background.png");
-  height: 100vh;
+  height: 100%;
   min-width: 980px;
   background-position: bottom;
   background-size: cover;
@@ -116,8 +116,7 @@
 
 .hitbox {
   position: absolute;
-  outline: 1px solid red;
-  width: 45px;
+  width: 50px;
   height: 40px;
   top: 50%;
   transform: translateY(-50%);
@@ -135,7 +134,7 @@
 .menu-btn:hover .level::before,
 .menu-btn:hover .level::after {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) scale(1);
 }
 
 .menu-btn__sub {
@@ -199,16 +198,12 @@
 .ori {
   width: 400px;
   position: absolute;
-  filter: drop-shadow( 0 0 15px var(--primary2-color));
   bottom: -90px;
   left: 50%;
+  box-shadow: 0 0 5px var(--primary2-color);
   animation: spin 6s linear infinite;
   transition: filter 0.3s ease-in-out;
   z-index: -1;
-}
-
-.ori:hover {
-  filter: drop-shadow( 0 0 20px var(--primary2-color));
 }
 
 @keyframes spin {
