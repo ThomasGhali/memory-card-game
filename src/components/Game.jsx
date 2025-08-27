@@ -7,8 +7,19 @@ import getRandomImagesArr from "./cards"
 
 export default function Game({ cardsVisible, cards }) {
   const [cardsStatus, setCardsStatus] = useState(null);
-  const [cardsUi, setCardsUi] = useState(null);
   
+  // randomly shuffles the array (fisher-yates)
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = 0; i < arr.length; i++) {
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+  }
+
   // flip all cards and return back changed
   function cardsFlip() {
     setCardsStatus(prev => prev.map((ele) => ({...ele, flipped: true})))
@@ -23,14 +34,19 @@ export default function Game({ cardsVisible, cards }) {
       })
   }
   
-  function handleCardSelect() {
+  // returns true of the 
+  function isCardSelected(array, id) {
+    return array.some(obj => (obj.id === id) && (obj.selected === true));
+  }
+
+  function handleCardSelect(id) {
+
     cardsFlip();
     
   }
 
   // initialize cards (UI and status)
   useEffect(() => {
-    function initGameCards() {
       // return unique arr of images with length passed
       const randomImagesArr = getRandomImagesArr(cards);
       const arr = new Array(cards);
@@ -39,25 +55,23 @@ export default function Game({ cardsVisible, cards }) {
         arr[i] = {
           imgUrl: randomImagesArr[i],
           selected: false,
-          flipped: false
+          flipped: false,
+          id: crypto.randomUUID(),
         };
       }
       
       setCardsStatus(arr);
-      
-      return Array.from({ length: cardsVisible }).map((_, index) => (
-        <YugiCard 
-          key={index} 
-          imgUrl={arr[index].imgUrl} 
-          flipped={arr[index].flipped}
-          setCardsStatus={setCardsStatus}
-        />
-      ));
-    }
+  }, [cards])
 
-    setCardsUi(initGameCards());
-
-  }, [])
+  // return Array.from({ length: cardsVisible }).map((card, index) => (
+  //   <YugiCard 
+  //     key={index} 
+  //     imgUrl={arr[index].imgUrl} 
+  //     flipped={arr[index].flipped}
+  //     setCardsStatus={setCardsStatus}
+  //     onClick={() => handleCardSelect(arr[index].name)}
+  //   />
+  // ));
 
   return (
     <div className="game-wrapper">
@@ -84,7 +98,16 @@ export default function Game({ cardsVisible, cards }) {
       </header>
 
       <main className="game-container">
-        {cardsUi}
+        {cardsStatus.splice(0, cardsVisible).map(card => (
+          <YugiCard 
+            key={card.id}
+            imgUrl={card.imgUrl}
+            flipped={card.flipped}
+            onClick={() => handleCardSelect(card.id)}
+          />
+        ))
+
+        }
       </main>
     </div>
   )
