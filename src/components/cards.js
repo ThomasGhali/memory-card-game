@@ -1,4 +1,4 @@
-export default function randomCard(num) {
+export default function getRandomImagesArr(num) {
   const arr = [];
   
   for (let i = 0; i < num; i++) {

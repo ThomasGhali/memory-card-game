@@ -1,30 +1,39 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "../styles/Game.css"
 import yugi from "../assets/yugi-normal.png"
 import inGameMessage from "../components/inGameMessage"
 import YugiCard from "./YugiCard"
-import randomCard from "./cards"
+import getRandomImagesArr from "./cards"
 
 export default function Game({ cardsVisible, cards }) {
   const [cardsStatus, setCardsStatus] = useState(null);
+  const [cardsUi, setCardsUi] = useState(null);
   
-  function renderGameCards() {
-    const arr = new Array(cards);
-    // fill the array with card objs
-    for (let i = 0; i < cards; i++) {
-      arr[i] = {
-        imgUrl: randomCard(),
-        selected: false,
-      };
+  // initialize cards (UI and status)
+  useEffect(() => {
+    function initGameCards() {
+      // return unique arr of images with length passed
+      const randomImagesArr = getRandomImagesArr(cards);
+      const arr = new Array(cards);
+      // fill the array with card objs
+      for (let i = 0; i < cards; i++) {
+        arr[i] = {
+          imgUrl: randomImagesArr[i],
+          selected: false,
+          flipped: false
+        };
+      }
+      
+      setCardsStatus(arr);
+      
+      return Array.from({ length: cardsVisible }).map((_, index) => (
+        <YugiCard key={index} imgUrl={arr[index].imgUrl} />
+      ));
     }
 
-    return [...Array(cardsVisible)].map((_, index) => {
+    setCardsUi(initGameCards());
 
-      // setCardsStatus(arr);
-
-      return <YugiCard imgUrl={arr[index].imgUrl} />;
-    });
-  }
+  }, [])
 
   return (
     <div className="game-wrapper">
@@ -51,7 +60,7 @@ export default function Game({ cardsVisible, cards }) {
       </header>
 
       <main className="game-container">
-        {renderGameCards()}
+        {cardsUi}
       </main>
     </div>
   )

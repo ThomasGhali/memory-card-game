@@ -40,6 +40,10 @@ a, button {
   cursor: url('./assets/cursor-point.png') ,pointer !important;
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 /* =====================
   PAGE CONTAINER STYLES
 ===================== */

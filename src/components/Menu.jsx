@@ -19,7 +19,7 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
       level: 'Easy',
       order: 1,
       text: 'Cardboard Chaos',
-      cardsVisible: 4,
+      cardsVisible: 3,
       cards: 6,
     },
     {
