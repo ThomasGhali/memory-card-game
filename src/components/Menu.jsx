@@ -15,10 +15,29 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
 
   const currentLevelIndex = gameLevel.order - 1;
   const levels = [
-    { level: 'Easy', order: 1, text: 'Cardboard Chaos' },
-    { level: 'Mid', order: 2, text: 'Deck of Doom' },
-    { level: 'Hard', order: 3, text: 'Ring of Ridiculousness' },
-  ];
+    {
+      level: 'Easy',
+      order: 1,
+      text: 'Cardboard Chaos',
+      cardsVisible: 4,
+      cards: 6,
+    },
+    {
+      level: 'Mid',
+      order: 2,
+      text: 'Deck of Doom',
+      cardsVisible: 5,
+      cards: 8,
+    },
+    {
+      level: 'Hard',
+      order: 3,
+      text: 'Ring of Ridiculousness',
+      cardsVisible: 7,
+      cards: 12,
+    },
+  ]
+
   const numberOfLevels = levels.length;
 
 

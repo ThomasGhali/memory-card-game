@@ -1,6 +1,6 @@
-/* ======================
+/* =======================
   GAME CONTAINER STYLES
-====================== */
+======================= */
 *{ 
   /* outline: 1px solid red; */
 }
@@ -13,9 +13,9 @@
   padding: 15px;
 }
 
-/* ======================
+/* ====================
   GAME HEADER STYLES
-====================== */
+==================== */
 
 .game-header {
   display: flex;
@@ -74,19 +74,24 @@
   color: var(--accent1-color);
 }
 
-/* ======================
+/* ==================
   GAME MAIN STYLES
-====================== */
+================== */
 
 .game-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  outline: 1px solid red;
 }
+
+/* =============
+  CARD STYLES
+============= */
 
 .card-container {
   perspective: 1000px;
-  width: 100px;
+  width: 150px;
   aspect-ratio: 0.686;
   background-color: transparent;
   border: none;
@@ -131,4 +136,8 @@
 
 .card .back {
   transform: rotateY(180deg);
+}
+
+.tilt {
+  outline: 1px solid red;
 }

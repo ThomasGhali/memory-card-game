@@ -4,7 +4,14 @@ import Menu from "./components/Menu"
 import Game from "./components/Game";
 
 export default function App() {
-  const [gameLevel, setGameLevel] = useState({level: 'Easy', order: 1, text: "Cardboard Chaos"})
+  const [gameLevel, setGameLevel] = useState({
+    level: 'Easy',
+    order: 1,
+    text: 'Cardboard Chaos',
+    cardsVisible: 4,
+    cards: 6,
+  });
+
   const [page, setPage] = useState('menu');
 
   const menuRef = useRef(null);
@@ -36,7 +43,10 @@ export default function App() {
             nodeRef={gameRef}
           >
             <div className="page" ref={gameRef}>
-                <Game />
+                <Game 
+                  cardsVisible={gameLevel.cardsVisible} 
+                  cards={gameLevel.cards}
+                />
             </div>
           </CSSTransition>
         )}

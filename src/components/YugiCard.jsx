@@ -19,6 +19,7 @@ export default function YugiCard() {
   }
   return (
       <Tilt
+        tiltReverse={true}
         glareEnable={true}
         glareMaxOpacity={0.6}
         glareColor="silver"
@@ -30,7 +31,7 @@ export default function YugiCard() {
           className="card-container"
         >
           <div className={`card ${flipped ? "flipped" : ""}`}>
-            <img onClick={handleFlip} src={currentCard} width="300px" className="front" />
+            <img onClick={handleFlip} src={currentCard} className="front" />
             <img src={backCard} width="299.5px" className="back" />
           </div>
         </button>

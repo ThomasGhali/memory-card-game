@@ -1,9 +1,31 @@
+import { useState } from "react"
 import "../styles/Game.css"
 import yugi from "../assets/yugi-normal.png"
 import inGameMessage from "../components/inGameMessage"
 import YugiCard from "./YugiCard"
+import randomCard from "./cards"
 
-export default function Game() {
+export default function Game({ cardsVisible, cards }) {
+  const [cardsStatus, setCardsStatus] = useState(null);
+  
+  function renderGameCards() {
+    const arr = new Array(cards);
+    // fill the array with card objs
+    for (let i = 0; i < cards; i++) {
+      arr[i] = {
+        imgUrl: randomCard(),
+        selected: false,
+      };
+    }
+
+    return [...Array(cardsVisible)].map((_, index) => {
+
+      setCardsStatus(arr);
+
+      return <YugiCard imgUrl={arr[index]} />;
+    });
+  }
+  
   return (
     <div className="game-wrapper">
       <header className="game-header">
@@ -29,7 +51,7 @@ export default function Game() {
       </header>
 
       <main className="game-container">
-        <YugiCard />
+        {renderGameCards()}
       </main>
     </div>
   )
