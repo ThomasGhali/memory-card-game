@@ -4,7 +4,7 @@ import frontCard1 from "../assets/front1.jpg"
 import backCard from "../assets/card.jpg"
 import Tilt from 'react-parallax-tilt'
 
-export default function YugiCard() {
+export default function YugiCard({ imgUrl }) {
   const [flipped, setFlipped] = useState(false)
   const [currentCard, setCurrentCard] = useState(frontCard);
 
@@ -31,7 +31,7 @@ export default function YugiCard() {
           className="card-container"
         >
           <div className={`card ${flipped ? "flipped" : ""}`}>
-            <img onClick={handleFlip} src={currentCard} className="front" />
+            <img onClick={handleFlip} src={imgUrl} className="front" />
             <img src={backCard} width="299.5px" className="back" />
           </div>
         </button>

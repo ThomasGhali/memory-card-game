@@ -20,12 +20,12 @@ export default function Game({ cardsVisible, cards }) {
 
     return [...Array(cardsVisible)].map((_, index) => {
 
-      setCardsStatus(arr);
+      // setCardsStatus(arr);
 
-      return <YugiCard imgUrl={arr[index]} />;
+      return <YugiCard imgUrl={arr[index].imgUrl} />;
     });
   }
-  
+
   return (
     <div className="game-wrapper">
       <header className="game-header">
