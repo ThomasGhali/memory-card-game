@@ -9,6 +9,25 @@ export default function Game({ cardsVisible, cards }) {
   const [cardsStatus, setCardsStatus] = useState(null);
   const [cardsUi, setCardsUi] = useState(null);
   
+  // flip all cards and return back changed
+  function cardsFlip() {
+    setCardsStatus(prev => prev.map((ele) => ({...ele, flipped: true})))
+
+      setTimeout(() => {
+        // after 800ms, flip all cards
+        setTimeout(() => {
+          setCardsStatus((prevState) =>
+            prevState.map((card) => ({ ...card, flipped: true }))
+          );
+        }, 800);
+      })
+  }
+  
+  function handleCardSelect() {
+    cardsFlip();
+    
+  }
+
   // initialize cards (UI and status)
   useEffect(() => {
     function initGameCards() {
@@ -27,7 +46,12 @@ export default function Game({ cardsVisible, cards }) {
       setCardsStatus(arr);
       
       return Array.from({ length: cardsVisible }).map((_, index) => (
-        <YugiCard key={index} imgUrl={arr[index].imgUrl} />
+        <YugiCard 
+          key={index} 
+          imgUrl={arr[index].imgUrl} 
+          flipped={arr[index].flipped}
+          setCardsStatus={setCardsStatus}
+        />
       ));
     }
 

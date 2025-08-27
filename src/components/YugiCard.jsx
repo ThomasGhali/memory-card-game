@@ -4,19 +4,9 @@ import frontCard1 from "../assets/front1.jpg"
 import backCard from "../assets/card.jpg"
 import Tilt from 'react-parallax-tilt'
 
-export default function YugiCard({ imgUrl }) {
-  const [flipped, setFlipped] = useState(false)
+export default function YugiCard({ imgUrl, flipped, setCardsStatus }) {
   const [currentCard, setCurrentCard] = useState(frontCard);
 
-  function handleFlip() {
-      setFlipped(true);
-
-      setTimeout(() => {
-        setCurrentCard(frontCard1);
-        setFlipped(false);
-      }, 800);
-    
-  }
   return (
       <Tilt
         tiltReverse={true}
