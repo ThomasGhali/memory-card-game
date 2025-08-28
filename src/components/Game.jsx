@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react"
 import "../styles/Game.css"
-import yugiNormal from "../assets/yugi-normal.png"
-import yugiHappy from "../assets/yugi-happy.png"
-import yugiFurious from "../assets/yugi-furious.png"
-import inGameMessage from './inGameMessage'
-import openingMessage from "./openningMessage"
-import lostMessage from "./lostMessage"
-import YugiCard from "./YugiCard"
-import { Typewriter } from "react-simple-typewriter";
+
 import getRandomImagesArr from "./cards"
+import gameWonMessages from "../yugi-messages/wonMessages"
+import inGameMessage from '../yugi-messages/inGameMessage'
+import lostMessage from "../yugi-messages/lostMessage"
+import openingMessage from "./openningMessage"
+
+import { Typewriter } from "react-simple-typewriter"
+import YugiCard from "./YugiCard"
+
+import yugiFurious from "../assets/yugi-furious.png"
+import yugiHappy from "../assets/yugi-happy.png"
+import yugiNormal from "../assets/yugi-normal.png"
+import gameWon from "../assets/won.gif"
+import gameLost from "../assets/lost.gif"
 
 export default function Game({ cardsVisible, cards, handleGameRestart }) {
   const [cardsStatus, setCardsStatus] = useState([]);
@@ -76,16 +82,6 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
     return (array.some((obj) => obj.id === id && obj.selected));
   }
 
-  function markCardSelected(id) {
-    setCardsStatus(prev => 
-      prev.map(card => (card.id === id ? {...card, selected: true} : {...card}))
-    )
-  }
-
-  useEffect(() => {
-    console.log(cardsStatus);
-  }, [cardsStatus])
-
   // cards flipping animation, shuffling or ending game
   function handleCardSelect(id) {
     if (isGameOver) return;
@@ -106,7 +102,7 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
     
     if (isGameWon) {
       setIsGameOver('won');
-      console.log("game won");
+      setGameMessage(gameWonMessages())
       return;
     }
 
@@ -148,7 +144,10 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
               words={[gameMessage, '']}
               loop={1}
               cursor
-              cursorStyle={isGameOver === 'lost' ? "⭕" : "_"}
+              cursorStyle={
+                isGameOver === 'lost' ? "⭕" : 
+                isGameOver === 'won' ? "✨" : '_'
+              }
               typeSpeed={30}
               deleteSpeed={40}
               delaySpeed={isGameOver === 'lost' ? 10000 : 4000}
@@ -231,8 +230,17 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
             onClick={() => handleCardSelect(card.id)}
           />
         ))
-
         }
+
+        <div className="gameEndWindow-wrapper">
+          <p className="end-game-sentense">
+            {isGameOver === 'win' ? 'Good job, yugi can feel his soul!' : 'Yugi is captured, keep tring!'}
+          </p>
+          <img src={isGameOver === 'win' ? gameWon : gameLost} className="game-end-gif" />
+          <button className="end-restart">
+            Restart
+          </button>
+        </div>
       </main>
     </div>
   )

@@ -4,7 +4,7 @@ import logo from '../assets/demo2.png'
 import ori from '../assets/orichalcos.png'
 import menu from '../assets/menu.png'
 import menuBtns from '../assets/button.png'
-import entranceMessage from './EntranceMessages'
+import entranceMessage from '../yugi-messages/EntranceMessages'
 import { useEffect, useState } from 'react'
 import { Typewriter } from "react-simple-typewriter";
 
