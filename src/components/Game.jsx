@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react"
 import "../styles/Game.css"
 import yugi from "../assets/yugi-normal.png"
-import inGameMessage from "../components/inGameMessage"
+import inGameMessage from './inGameMessage'
+import openingMessage from "./openningMessage"
+import lostMessage from "./lostMessage"
 import YugiCard from "./YugiCard"
+import { Typewriter } from "react-simple-typewriter";
 import getRandomImagesArr from "./cards"
 
 export default function Game({ cardsVisible, cards }) {
   const [cardsStatus, setCardsStatus] = useState([]);
-  const [inGameMessage, setInGameMessage] = useState('');
+  const [gameMessage, setGameMessage] = useState('');
+  const [isGameOver, setIsGameOver] = useState(null);
   
   function areVisibleCardsSelected(array) {
     for (let i = 0; i < cardsVisible; i++) {
@@ -46,7 +50,7 @@ export default function Game({ cardsVisible, cards }) {
     setCardsStatus((prev) => shuffleArray(prev));
 
     // give some time for shuffling logic and loading images
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 150));
 
     setCardsStatus(
       prev => prev.map((card) =>
@@ -64,10 +68,12 @@ export default function Game({ cardsVisible, cards }) {
   // cards flipping animation, shuffling or ending game
   function handleCardSelect(id) {
     if (isCardSelected(cardsStatus, id)) {
-      console.log('game ended');
+      setGameMessage(lostMessage());
+      setIsGameOver('lost');
       return;
     }
 
+    setGameMessage(inGameMessage());
     cardsFlip(id);
   }
 
@@ -89,13 +95,27 @@ export default function Game({ cardsVisible, cards }) {
       setCardsStatus(arr);
   }, [cards])
 
+  // init yugi's message
+  useEffect(() => {
+    setGameMessage(openingMessage());
+  }, [])
+
   return (
     <div className="game-wrapper">
       <header className="game-header">
         <div className="yugi-talks">
           <img src={yugi} />
-          <div>
-            message here
+          <div style={{ color: isGameOver === 'lost' ? 'red' : 'var(--primary1-color)' }}>
+            <Typewriter 
+              key={gameMessage}
+              words={[gameMessage, '']}
+              loop={1}
+              cursor
+              cursorStyle={isGameOver === 'lost' ? "🔐" : "_"}
+              typeSpeed={30}
+              deleteSpeed={40}
+              delaySpeed={isGameOver === 'lost' ? 10000 : 4000}
+            />
           </div>
         </div>
         <div className="score">
@@ -114,7 +134,7 @@ export default function Game({ cardsVisible, cards }) {
       </header>
 
       <main className="game-container">
-        {cardsStatus.slice(0, cardsVisible).map(card => (
+        {cardsStatus?.slice(0, cardsVisible).map(card => (
           <YugiCard 
             key={card.id}
             imgUrl={card.imgUrl}

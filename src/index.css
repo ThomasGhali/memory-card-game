@@ -15,7 +15,7 @@
 
 body, html {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: black;
   overflow-x: hidden;
 }
@@ -42,6 +42,23 @@ a, button {
 
 img {
   -webkit-user-drag: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #3736367d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent1-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 /* =====================
