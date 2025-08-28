@@ -7,7 +7,19 @@ import getRandomImagesArr from "./cards"
 
 export default function Game({ cardsVisible, cards }) {
   const [cardsStatus, setCardsStatus] = useState([]);
+  const [inGameMessage, setInGameMessage] = useState('');
   
+  function areVisibleCardsSelected(array) {
+    for (let i = 0; i < cardsVisible; i++) {
+      // there is a card visible not selected
+      if (array[i].selected === false) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // randomly shuffles the array (fisher-yates)
   function shuffleArray(array) {
     const arr = [...array];
@@ -16,6 +28,11 @@ export default function Game({ cardsVisible, cards }) {
 
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+
+    if (areVisibleCardsSelected(arr)) {
+      shuffleArray(array);
+      return;
+    };
 
     return arr;
   }
@@ -38,18 +55,6 @@ export default function Game({ cardsVisible, cards }) {
     );
   
   }
-      // return shuffled.map((card) =>
-      //   card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
-      // );
-  
-  // setTimeout(() => {
-  //   setCardsStatus((prev) => {
-  //     const shuffled = shuffleArray(prev);
-  //     return shuffled.map((card) =>
-  //       card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
-  //     );
-  //   });
-  // }, 900);
 
   // true if card is already selected (game over)
   function isCardSelected(array, id) {

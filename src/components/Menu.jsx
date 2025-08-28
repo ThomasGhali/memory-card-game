@@ -13,7 +13,6 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
   // State Variables
   const [message, setMessage] = useState('');
 
-  const currentLevelIndex = gameLevel.order - 1;
   const levels = [
     {
       level: 'Easy',
@@ -37,15 +36,14 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
       cards: 12,
     },
   ]
-
+  
+  const currentLevelIndex = gameLevel.order - 1;
   const numberOfLevels = levels.length;
-
-
-
+  
   // change levels
   function changeLevel(nextLevelIndex) {
     const newIndex = (currentLevelIndex + nextLevelIndex + numberOfLevels) % numberOfLevels;
-
+    
     setGameLevel({...levels[newIndex]});
   }
 
