@@ -26,6 +26,14 @@
   margin-bottom: 10px;
 }
 
+@media (max-width: 465px) {
+  .game-header {
+    gap: 4px;
+  }
+}
+
+/* --- YUGI TALKING CONTAINER --- */
+
 .yugi-talks {
   width: clamp(140px, 60vw, 310px);
   display: flex;
@@ -46,8 +54,73 @@
   padding: 5px;
 }
 
+/* --- CONTROLS CONTAINER --- */
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  width: max(155px, 30%);
+  flex-shrink: 0;
+  row-gap: 10px;
+}
+
+.controls__navigate {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.control-btn {
+  background-color: rgba(98, 96, 96, 0.285);
+  color: white;
+  border: none;
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 3px;
+}
+
+.control-btn:hover {
+  background-color: rgba(197, 194, 194, 0.285);
+}
+
+.controls__sound {
+  display: flex;
+  justify-content: center;
+  column-gap: 15px;
+}
+
+.controls__sound > svg {
+  width: 25px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.137);
+  padding: 3px;
+  cursor: url('../assets/cursor-point.png'), pointer;
+}
+
+@media (max-width: 465px) {
+  .controls {
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
+    width: max(170px, 70%);
+  }
+
+  .control-btn {
+    background-color: rgba(98, 96, 96, 0.285);
+    color: white;
+    border: none;
+    padding: 2px;
+    font-size: 0.7rem;
+    border-radius: 3px;
+  }
+  
+}
+
+/* --- SCORE CONTAINER --- */
+
 .score {
   width: 200px;
+  min-width: 120px;
   height: 67px;
   font-size: 0.9rem;
   border: 1px solid var(--primary1-color);
@@ -83,12 +156,16 @@
   }
 
   .yugi-talks > img {
-    width: 30%;
+    width: 20%;
+  }
+
+  .yugi-talks > div {
+    font-size: 0.6rem;
   }
 
   .score {
-    height: 40px;
-    width: max(125px, 80%);
+    height: 20px;
+    width: max(180px, 80%);
     font-size: 0.6rem;
     flex-direction: row;
     padding: 0 10px;
@@ -100,6 +177,14 @@
 
   .score__numbers {
     justify-content: space-evenly;
+  }
+
+  .score__best,
+  .score__current
+  {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
   }
 
   .score__label {
@@ -175,10 +260,6 @@
 
 .card .back {
   transform: rotateY(180deg);
-}
-
-.tilt {
-  outline: 1px solid red;
 }
 
 /* =============
