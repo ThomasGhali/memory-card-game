@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import "../styles/Game.css"
-import yugi from "../assets/yugi-normal.png"
+import yugiNormal from "../assets/yugi-normal.png"
+import yugiHappy from "../assets/yugi-happy.png"
+import yugiFurious from "../assets/yugi-furious.png"
 import inGameMessage from './inGameMessage'
 import openingMessage from "./openningMessage"
 import lostMessage from "./lostMessage"
@@ -8,11 +10,21 @@ import YugiCard from "./YugiCard"
 import { Typewriter } from "react-simple-typewriter";
 import getRandomImagesArr from "./cards"
 
-export default function Game({ cardsVisible, cards }) {
+export default function Game({ cardsVisible, cards, handleGameRestart }) {
   const [cardsStatus, setCardsStatus] = useState([]);
   const [gameMessage, setGameMessage] = useState('');
   const [isGameOver, setIsGameOver] = useState(null);
   
+  function getYugiImage() {
+    if (isGameOver === null) {
+      return yugiNormal;
+    } else if (isGameOver === "lost") {
+      return yugiFurious;
+    }
+
+    return yugiHappy;
+  }
+
   function areVisibleCardsSelected(array) {
     for (let i = 0; i < cardsVisible; i++) {
       // there is a card visible not selected
@@ -34,7 +46,7 @@ export default function Game({ cardsVisible, cards }) {
     }
 
     if (areVisibleCardsSelected(arr)) {
-      return shuffleArray(array);
+      return shuffleArray(arr);
     };
 
     return arr;
@@ -42,27 +54,37 @@ export default function Game({ cardsVisible, cards }) {
 
   // flip all cards and return back changed
   async function cardsFlip(id) {
-    setCardsStatus(prev => prev.map((ele) => ({...ele, flipped: true})))
+    setCardsStatus(prev =>
+      prev.map((card) => ({ ...card, flipped: true }))
+    )
 
     // wait for rotation animation
     await new Promise(r => setTimeout(r, 700));
     setCardsStatus((prev) => shuffleArray(prev));
 
     // give some time for shuffling logic and loading images
-    await new Promise(r => setTimeout(r, 150));
+    await new Promise(r => setTimeout(r, 200));
 
-    setCardsStatus(
-      prev => prev.map((card) =>
-        card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
-      )
+    setCardsStatus(prev => 
+      prev.map((card) => ({ ...card, flipped: false }))
     );
   
   }
 
   // true if card is already selected (game over)
   function isCardSelected(array, id) {
-    return array.some((obj) => obj.id === id && obj.selected);
+    return (array.some((obj) => obj.id === id && obj.selected));
   }
+
+  function markCardSelected(id) {
+    setCardsStatus(prev => 
+      prev.map(card => (card.id === id ? {...card, selected: true} : {...card}))
+    )
+  }
+
+  useEffect(() => {
+    console.log(cardsStatus);
+  }, [cardsStatus])
 
   // cards flipping animation, shuffling or ending game
   function handleCardSelect(id) {
@@ -74,8 +96,22 @@ export default function Game({ cardsVisible, cards }) {
       return;
     }
 
-    setGameMessage(inGameMessage());
+    let updated = cardsStatus.map(card => (
+        card.id === id ? {...card, selected: true} : card
+      ));
+
+    setCardsStatus(updated);
+
+    const isGameWon = updated.every(card => card.selected);
+    
+    if (isGameWon) {
+      setIsGameOver('won');
+      console.log("game won");
+      return;
+    }
+
     cardsFlip(id);
+    setGameMessage(inGameMessage());
   }
 
   // initialize cards (UI and status)
@@ -105,14 +141,14 @@ export default function Game({ cardsVisible, cards }) {
     <div className="game-wrapper">
       <header className="game-header">
         <div className="yugi-talks">
-          <img src={yugi} />
+          <img src={getYugiImage()} />
           <div style={{ color: isGameOver === 'lost' ? 'red' : 'var(--primary1-color)' }}>
             <Typewriter 
               key={gameMessage}
               words={[gameMessage, '']}
               loop={1}
               cursor
-              cursorStyle={isGameOver === 'lost' ? "🔐" : "_"}
+              cursorStyle={isGameOver === 'lost' ? "⭕" : "_"}
               typeSpeed={30}
               deleteSpeed={40}
               delaySpeed={isGameOver === 'lost' ? 10000 : 4000}

@@ -12,6 +12,10 @@ export default function App() {
     cards: 6,
   });
 
+  function handleGameRestart() {
+    
+  }
+
   const [page, setPage] = useState('menu');
 
   const menuRef = useRef(null);
