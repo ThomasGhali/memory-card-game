@@ -6,7 +6,7 @@ import YugiCard from "./YugiCard"
 import getRandomImagesArr from "./cards"
 
 export default function Game({ cardsVisible, cards }) {
-  const [cardsStatus, setCardsStatus] = useState(null);
+  const [cardsStatus, setCardsStatus] = useState([]);
   
   // randomly shuffles the array (fisher-yates)
   function shuffleArray(array) {
@@ -21,28 +21,49 @@ export default function Game({ cardsVisible, cards }) {
   }
 
   // flip all cards and return back changed
-  function cardsFlip() {
+  async function cardsFlip(id) {
     setCardsStatus(prev => prev.map((ele) => ({...ele, flipped: true})))
 
-      setTimeout(() => {
-        // after 800ms, flip all cards
-        setTimeout(() => {
-          setCardsStatus((prevState) =>
-            prevState.map((card) => ({ ...card, flipped: true }))
-          );
-        }, 800);
-      })
-  }
+    // wait for rotation animation
+    await new Promise(r => setTimeout(r, 700));
+    setCardsStatus((prev) => shuffleArray(prev));
+
+    // give some time for shuffling logic and loading images
+    await new Promise(r => setTimeout(r, 100));
+
+    setCardsStatus(
+      prev => prev.map((card) =>
+        card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
+      )
+    );
   
-  // returns true of the 
+  }
+      // return shuffled.map((card) =>
+      //   card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
+      // );
+  
+  // setTimeout(() => {
+  //   setCardsStatus((prev) => {
+  //     const shuffled = shuffleArray(prev);
+  //     return shuffled.map((card) =>
+  //       card.id === id ? { ...card, flipped: false, selected: true } : { ...card, flipped: false }
+  //     );
+  //   });
+  // }, 900);
+
+  // true if card is already selected (game over)
   function isCardSelected(array, id) {
-    return array.some(obj => (obj.id === id) && (obj.selected === true));
+    return array.some((obj) => obj.id === id && obj.selected);
   }
 
+  // cards flipping animation, shuffling or ending game
   function handleCardSelect(id) {
+    if (isCardSelected(cardsStatus, id)) {
+      console.log('game ended');
+      return;
+    }
 
-    cardsFlip();
-    
+    cardsFlip(id);
   }
 
   // initialize cards (UI and status)
@@ -62,16 +83,6 @@ export default function Game({ cardsVisible, cards }) {
       
       setCardsStatus(arr);
   }, [cards])
-
-  // return Array.from({ length: cardsVisible }).map((card, index) => (
-  //   <YugiCard 
-  //     key={index} 
-  //     imgUrl={arr[index].imgUrl} 
-  //     flipped={arr[index].flipped}
-  //     setCardsStatus={setCardsStatus}
-  //     onClick={() => handleCardSelect(arr[index].name)}
-  //   />
-  // ));
 
   return (
     <div className="game-wrapper">
@@ -98,7 +109,7 @@ export default function Game({ cardsVisible, cards }) {
       </header>
 
       <main className="game-container">
-        {cardsStatus.splice(0, cardsVisible).map(card => (
+        {cardsStatus.slice(0, cardsVisible).map(card => (
           <YugiCard 
             key={card.id}
             imgUrl={card.imgUrl}
