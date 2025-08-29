@@ -2,6 +2,8 @@ import { useState, useRef } from "react"
 import { CSSTransition, TransitionGroup} from "react-transition-group"
 import Menu from "./components/Menu"
 import Game from "./components/Game";
+import useSound from "use-sound";
+import buttonSound from "./assets/button.mp3"
 
 export default function App() {
   const [gameLevel, setGameLevel] = useState({
@@ -13,15 +15,22 @@ export default function App() {
   });
   
   const [page, setPage] = useState('menu');
+  const [disabled, setDisabled] = useState(false);
+
   const [resetCounter, setResetCounter] = useState(0);
   const [musicIsMuted, setMusicIsMuted] = useState(true);
   const [soundIsMuted, setSoundIsMuted] = useState(false)
+  const [playClick] = useSound(buttonSound, {volume: 0.7})
   
   const menuRef = useRef(null);
   const gameRef = useRef(null);
 
   function handleGameRestart() {
+    setDisabled(true);
     setResetCounter(prev => prev + 1);
+    setTimeout(() => {
+      setDisabled(false)
+    }, 2000);
   }
 
   return(
@@ -43,7 +52,8 @@ export default function App() {
                 musicIsMuted, 
                 setMusicIsMuted, 
                 soundIsMuted, 
-                setSoundIsMuted 
+                setSoundIsMuted,
+                playClick,
               }} />
             </div>
           </CSSTransition>
@@ -67,7 +77,9 @@ export default function App() {
                     musicIsMuted, 
                     setMusicIsMuted, 
                     soundIsMuted, 
-                    setSoundIsMuted
+                    setSoundIsMuted,
+                    playClick,
+                    disabled,
                   }} 
                 />
             </div>

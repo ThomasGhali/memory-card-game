@@ -100,3 +100,23 @@ img {
   transition: opacity 800ms ease, transform 800ms ease;
   z-index: 2;
 }
+
+/* --- MUSIC CONTROLS STYLES --- */
+.music-muted {
+  position: relative;
+  display: inline-block;
+}
+
+.music-muted::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  height: 2px;
+  width: 110%;
+  border-radius: 1px;
+  background-color: red;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  pointer-events: none;
+}

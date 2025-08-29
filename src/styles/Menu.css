@@ -55,24 +55,6 @@
   cursor: url('../assets/cursor-point.png') ,pointer !important;
 }
 
-.music-muted {
-  position: relative;
-  display: inline-block;
-}
-
-.music-muted::after {
-  content: '';
-  position: absolute;
-  left: -5%;
-  top: 50%;
-  height: 2px;
-  width: 110%;
-  border-radius: 1px;
-  background-color: red;
-  transform: rotate(-45deg);
-  transform-origin: center;
-  pointer-events: none;
-}
 
 /* --- MENU FRAME STYLES --- */
 
