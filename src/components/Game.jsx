@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import "../styles/Game.css"
 
 import getRandomImagesArr from "./cards"
@@ -10,16 +10,28 @@ import openingMessage from "./openningMessage"
 import { Typewriter } from "react-simple-typewriter"
 import YugiCard from "./YugiCard"
 
+import gameMusic from '../assets/game.mp3'
+
 import yugiFurious from "../assets/yugi-furious.png"
 import yugiHappy from "../assets/yugi-happy.png"
 import yugiNormal from "../assets/yugi-normal.png"
 import gameWon from "../assets/won.gif"
 import gameLost from "../assets/lost.gif"
 
-export default function Game({ cardsVisible, cards, handleRestart, resetCounter }) {
+export default function Game({
+  cardsVisible,
+  cards,
+  handleRestart,
+  resetCounter,
+  musicIsMuted,
+  setMusicIsMuted,
+  soundIsMuted,
+  setSoundIsMuted,
+}) {
   const [cardsStatus, setCardsStatus] = useState([]);
   const [gameMessage, setGameMessage] = useState('');
   const [isGameOver, setIsGameOver] = useState(null);
+  const isGameOverRef = useRef(false);
 
   const endGameGif = isGameOver === 'won' ? gameWon : gameLost;
   const endGameMessage = isGameOver === 'won' 
@@ -94,6 +106,7 @@ export default function Game({ cardsVisible, cards, handleRestart, resetCounter 
 
     if (isCardSelected(cardsStatus, id)) {
       setGameMessage(lostMessage());
+      isGameOverRef.current = 'lost';
       setIsGameOver('lost');
       return;
     }
@@ -107,6 +120,7 @@ export default function Game({ cardsVisible, cards, handleRestart, resetCounter 
     const isGameWon = updated.every(card => card.selected);
     
     if (isGameWon) {
+      isGameOverRef.current = 'won';
       setIsGameOver('won');
       setGameMessage(gameWonMessages())
       return;
@@ -118,8 +132,9 @@ export default function Game({ cardsVisible, cards, handleRestart, resetCounter 
 
   // initialize cards (UI and status)
   useEffect(() => {
-      // return unique arr of images with length passed
-      setIsGameOver(null);
+    isGameOverRef.current = false;
+    setIsGameOver(null);
+    // return unique arr of images with length passed
       const randomImagesArr = getRandomImagesArr(cards);
       const arr = new Array(cards);
       // fill the array with card objs
@@ -240,6 +255,7 @@ export default function Game({ cardsVisible, cards, handleRestart, resetCounter 
             key={card.id}
             imgUrl={card.imgUrl}
             flipped={card.flipped}
+            isGameOverRef={isGameOverRef}
             onClick={() => handleCardSelect(card.id)}
           />
         ))

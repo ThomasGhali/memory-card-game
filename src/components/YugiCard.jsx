@@ -1,11 +1,19 @@
 import { useState } from "react"
-import frontCard from "../assets/front.jpg"
-import frontCard1 from "../assets/front1.jpg"
 import backCard from "../assets/card.jpg"
+import useSound from "use-sound"
+import cardFlip from "../assets/cardFlip.mp3"
 import Tilt from 'react-parallax-tilt'
 
-export default function YugiCard({ imgUrl, flipped, setCardsStatus, onClick}) {
-  const [currentCard, setCurrentCard] = useState(frontCard);
+export default function YugiCard({ imgUrl, flipped, isGameOverRef, onClick}) {
+  const [cardFlipSound] = useSound(cardFlip, {volume: 0.7})
+
+  function handleClick() {
+    onClick();
+    
+    if(!isGameOverRef.current) {
+      cardFlipSound();
+    }
+  }
 
   return (
       <Tilt
@@ -19,7 +27,7 @@ export default function YugiCard({ imgUrl, flipped, setCardsStatus, onClick}) {
       >
         <button 
           className="card-container"
-          onClick={onClick}
+          onClick={handleClick}
         >
           <div className={`card ${flipped ? "flipped" : ""}`}>
             <img src={imgUrl} className="front" />

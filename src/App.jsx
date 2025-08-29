@@ -14,6 +14,8 @@ export default function App() {
   
   const [page, setPage] = useState('menu');
   const [resetCounter, setResetCounter] = useState(0);
+  const [musicIsMuted, setMusicIsMuted] = useState(true);
+  const [soundIsMuted, setSoundIsMuted] = useState(false)
   
   const menuRef = useRef(null);
   const gameRef = useRef(null);
@@ -34,7 +36,15 @@ export default function App() {
             nodeRef={menuRef}
           >
             <div className="page" ref={menuRef}>
-              <Menu {...{ gameLevel, setGameLevel, setPage }} />
+              <Menu {...{ 
+                gameLevel, 
+                setGameLevel, 
+                setPage, 
+                musicIsMuted, 
+                setMusicIsMuted, 
+                soundIsMuted, 
+                setSoundIsMuted 
+              }} />
             </div>
           </CSSTransition>
         )}
@@ -51,8 +61,14 @@ export default function App() {
                 <Game 
                   cardsVisible={gameLevel.cardsVisible} 
                   cards={gameLevel.cards}
-                  resetCounter={resetCounter}
                   handleRestart={handleGameRestart}
+                  {...{
+                    resetCounter,
+                    musicIsMuted, 
+                    setMusicIsMuted, 
+                    soundIsMuted, 
+                    setSoundIsMuted
+                  }} 
                 />
             </div>
           </CSSTransition>

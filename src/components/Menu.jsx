@@ -4,15 +4,28 @@ import logo from '../assets/demo2.png'
 import ori from '../assets/orichalcos.png'
 import menu from '../assets/menu.png'
 import menuBtns from '../assets/button.png'
+
 import entranceMessage from '../yugi-messages/EntranceMessages'
-import { useEffect, useState } from 'react'
-import { Typewriter } from "react-simple-typewriter";
+
+import useSound from 'use-sound'
+import menuMusic from '../assets/menu.mp3'
+import buttonSound from '../assets/button.mp3'
+
+import React, { useEffect, useState } from 'react'
+import { Typewriter } from "react-simple-typewriter"
 
 
-export default function Menu({ gameLevel, setGameLevel, setPage }) {
+export default function Menu({
+  gameLevel,
+  setGameLevel,
+  setPage,
+  musicIsMuted,
+  setMusicIsMuted,
+  soundIsMuted,
+  setSoundIsMuted,
+}) {
   // State Variables
   const [message, setMessage] = useState('');
-
   const levels = [
     {
       level: 'Easy',
@@ -39,6 +52,11 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
   
   const currentLevelIndex = gameLevel.order - 1;
   const numberOfLevels = levels.length;
+  const [playClick] = useSound(buttonSound, {volume: 0.7})
+  const [play, { stop, sound }] = useSound(menuMusic, {
+    volume: musicIsMuted ? 0 : 1,
+    loop: true,
+  });
   
   // change levels
   function changeLevel(nextLevelIndex) {
@@ -46,6 +64,15 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
     
     setGameLevel({...levels[newIndex]});
   }
+
+  function clickSound() {
+    if (!soundIsMuted) playClick();                
+  }
+
+  useEffect(() => {
+    play();
+    return () => stop();
+  }, [playClick, stop])
 
   useEffect(() => {
     setMessage(entranceMessage());
@@ -62,7 +89,10 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
             <button 
               aria-label="Start Game" 
               className="menu-btn"
-              onClick={() => setPage("game")}
+              onClick={() => {
+                clickSound();                
+                setPage("game");
+              }}
             >
               <img src={menuBtns} aria-hidden="true" />
               <span className="menu-btn__text">Start Game</span>
@@ -82,7 +112,13 @@ export default function Menu({ gameLevel, setGameLevel, setPage }) {
               ></span>
               <span className="menu-btn__sub">{gameLevel.text}</span>
             </button>
-            <button aria-label="Start Game" className="menu-btn">
+            <button 
+              aria-label="Start Game" 
+              className="menu-btn"
+              onClick={() => {
+                clickSound();                
+              }}
+            >
               <img src={menuBtns} aria-hidden="true" />
               <span className="menu-btn__text">How to play?</span>
             </button>
