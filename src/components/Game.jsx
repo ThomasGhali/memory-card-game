@@ -233,8 +233,8 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
         }
 
         <div className="gameEndWindow-wrapper">
-          <p className="end-game-sentense">
-            {isGameOver === 'win' ? 'Good job, yugi can feel his soul!' : 'Yugi is captured, keep tring!'}
+          <p className={`end-game-sentence ${isGameOver === 'win' ? 'won' : 'lost'}`}>
+            {isGameOver === 'win' ? 'Good job, yugi can feel his soul!' : 'Yugi is captured, keep trying!'}
           </p>
           <img src={isGameOver === 'win' ? gameWon : gameLost} className="game-end-gif" />
           <button className="end-restart">
