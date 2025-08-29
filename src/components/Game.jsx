@@ -16,10 +16,16 @@ import yugiNormal from "../assets/yugi-normal.png"
 import gameWon from "../assets/won.gif"
 import gameLost from "../assets/lost.gif"
 
-export default function Game({ cardsVisible, cards, handleGameRestart }) {
+export default function Game({ cardsVisible, cards, handleRestart, resetCounter }) {
   const [cardsStatus, setCardsStatus] = useState([]);
   const [gameMessage, setGameMessage] = useState('');
   const [isGameOver, setIsGameOver] = useState(null);
+
+  const endGameGif = isGameOver === 'won' ? gameWon : gameLost;
+  const endGameMessage = isGameOver === 'won' 
+    ? "Good job, yugi can feel his soul!"
+    : "Yugi is captured, keep trying!";
+  const endGameClass = isGameOver === 'won' ? 'won' : 'lost';
   
   function getYugiImage() {
     if (isGameOver === null) {
@@ -113,6 +119,7 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
   // initialize cards (UI and status)
   useEffect(() => {
       // return unique arr of images with length passed
+      setIsGameOver(null);
       const randomImagesArr = getRandomImagesArr(cards);
       const arr = new Array(cards);
       // fill the array with card objs
@@ -126,12 +133,12 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
       }
       
       setCardsStatus(arr);
-  }, [cards])
+  }, [cards, resetCounter])
 
   // init yugi's message
   useEffect(() => {
     setGameMessage(openingMessage());
-  }, [])
+  }, [resetCounter])
 
   return (
     <div className="game-wrapper">
@@ -150,14 +157,20 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
               }
               typeSpeed={30}
               deleteSpeed={40}
-              delaySpeed={isGameOver === 'lost' ? 10000 : 4000}
+              delaySpeed={isGameOver ? 10000 : 4000}
             />
           </div>
         </div>
         <div className="controls">
           <div className="controls__navigate">
-            <button className="control-btn">Restart</button>
-            <button className="control-btn">Main menu</button>
+            <button className="control-btn" onClick={handleRestart}>Restart</button>
+            <button 
+              className="control-btn" 
+              onClick={() => window.location.reload()}
+            >
+              Main menu
+
+            </button>
           </div>
           <div className="controls__sound">
             {/* <svg
@@ -232,15 +245,20 @@ export default function Game({ cardsVisible, cards, handleGameRestart }) {
         ))
         }
 
-        <div className="gameEndWindow-wrapper">
-          <p className={`end-game-sentence ${isGameOver === 'win' ? 'won' : 'lost'}`}>
-            {isGameOver === 'win' ? 'Good job, yugi can feel his soul!' : 'Yugi is captured, keep trying!'}
+        {isGameOver && <div 
+            className={`gameEndWindow-wrapper ${endGameClass}`}
+          >
+          <p className={`end-game-sentence ${endGameClass}`}>
+            {endGameMessage}
           </p>
-          <img src={isGameOver === 'win' ? gameWon : gameLost} className="game-end-gif" />
-          <button className="end-restart">
+          <img src={endGameGif} className="game-end-gif" />
+          <button 
+            className="end-restart"
+            onClick={handleRestart}
+          >
             Restart
           </button>
-        </div>
+        </div>}
       </main>
     </div>
   )

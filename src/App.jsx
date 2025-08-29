@@ -11,15 +11,16 @@ export default function App() {
     cardsVisible: 3,
     cards: 6,
   });
-
-  function handleGameRestart() {
-    
-  }
-
+  
   const [page, setPage] = useState('menu');
-
+  const [resetCounter, setResetCounter] = useState(0);
+  
   const menuRef = useRef(null);
   const gameRef = useRef(null);
+
+  function handleGameRestart() {
+    setResetCounter(prev => prev + 1);
+  }
 
   return(
     <>
@@ -45,11 +46,13 @@ export default function App() {
             classNames="fade" 
             unmountOnExit
             nodeRef={gameRef}
-          >
+            >
             <div className="page" ref={gameRef}>
                 <Game 
                   cardsVisible={gameLevel.cardsVisible} 
                   cards={gameLevel.cards}
+                  resetCounter={resetCounter}
+                  handleRestart={handleGameRestart}
                 />
             </div>
           </CSSTransition>
