@@ -27,10 +27,54 @@
   margin: 20px 0px;
 }
 
+/* --- LOGO & CONTROLS SECTION --- */
+
+.logo-controls-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .logo {
   height: 100px;
   margin-bottom: 10px;
 }
+
+.controls-wrapper {
+  width: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sound {
+  width: 40px;
+  border-radius: 50%;
+  background-color: rgb(61, 62, 62);
+  padding: 8px;
+  cursor: url('../assets/cursor-point.png') ,pointer !important;
+}
+
+.music-muted {
+  position: relative;
+  display: inline-block;
+}
+
+.music-muted::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  height: 2px;
+  width: 110%;
+  border-radius: 1px;
+  background-color: red;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+/* --- MENU FRAME STYLES --- */
 
 .menu-img-wrapper {
   position: relative;
@@ -39,6 +83,8 @@
 .menu-img {
   width: 100%;
 }
+
+/* --- MAIN MENU BUTTONS --- */
 
 .menu-buttons-wrapper {
   position: absolute;
