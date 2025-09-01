@@ -1,13 +1,14 @@
 .menu-container {
   background-image: url("../assets/background.png");
   height: 100%;
-  min-width: 980px;
+  width: 100%;
   background-position: bottom;
   background-size: cover;
   display: flex;
   justify-content: space-between;
   padding: 10px;
   align-items: center;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -22,7 +23,6 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  /* pointer-events: none; */
   user-select: none;
   margin: 20px 0px;
 }
@@ -54,7 +54,6 @@
   padding: 8px;
   cursor: url('../assets/cursor-point.png') ,pointer !important;
 }
-
 
 /* --- MENU FRAME STYLES --- */
 
@@ -213,7 +212,7 @@
 }
 
 .yugi {
-  height: 500px;
+  height: clamp(200px,80%,500px);
   z-index: 100;
   transform: translateY(0);
   transition: transform .2s ease-in-out;
@@ -240,5 +239,36 @@
   }
   to {
     transform: translateX(-50%) rotateX(75deg) rotateZ(360deg);
+  }
+}
+
+@media (max-width: 885px) {
+  .menu-container {
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+  }
+  .yugi-container {
+    transform: translate(60px, -70px) scale(.8);
+  }
+
+}
+
+@media (max-width: 420px) {
+  .yugi-container {
+    display: none;
+  }
+
+  .menu-window {
+    transform: scale(0.8);
+  }
+
+  .empty {
+    display: none;
+  }
+
+  .menu-container {
+    transform: scale(0.6) translateX(-85px);
+    min-width: 315px;
   }
 }
