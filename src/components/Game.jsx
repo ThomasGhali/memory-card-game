@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from "react"
-import "../styles/Game.css"
+import { useState, useEffect, useRef } from 'react'
+import '../styles/Game.css'
 
-import getRandomImagesArr from "./cards"
-import gameWonMessages from "../yugi-messages/wonMessages"
+import getRandomImagesArr from './cards'
+import gameWonMessages from '../yugi-messages/wonMessages'
 import inGameMessage from '../yugi-messages/inGameMessage'
-import lostMessage from "../yugi-messages/lostMessage"
-import openingMessage from "./openningMessage"
+import lostMessage from '../yugi-messages/lostMessage'
+import openingMessage from './openningMessage'
 
-import { Typewriter } from "react-simple-typewriter"
-import YugiCard from "./YugiCard"
+import { Typewriter } from 'react-simple-typewriter'
+import YugiCard from './YugiCard'
 
-import useSound from "use-sound"
+import useSound from 'use-sound'
 import gameMusic from '../assets/game.mp3'
 
-import yugiFurious from "../assets/yugi-furious.png"
-import yugiHappy from "../assets/yugi-happy.png"
-import yugiNormal from "../assets/yugi-normal.png"
-import gameWon from "../assets/won.gif"
-import gameLost from "../assets/lost.gif"
+import yugiFurious from '../assets/yugi-furious.png'
+import yugiHappy from '../assets/yugi-happy.png'
+import yugiNormal from '../assets/yugi-normal.png'
+import gameWon from '../assets/won.gif'
+import gameLost from '../assets/lost.gif'
 
 export default function Game({
   cardsVisible,
@@ -32,150 +32,158 @@ export default function Game({
   disabled,
 }) {
   // State variables
-  const [cardsStatus, setCardsStatus] = useState([]);
-  const [gameMessage, setGameMessage] = useState('');
-  const [isGameOver, setIsGameOver] = useState(null);
-  const isGameOverRef = useRef(false);
+  const [cardsStatus, setCardsStatus] = useState([])
+  const [gameMessage, setGameMessage] = useState('')
+  const [isGameOver, setIsGameOver] = useState(null)
+  const isGameOverRef = useRef(false)
+  const abortControllerRef = useRef(new AbortController())
 
   // Calculated variables
-  const endGameGif = isGameOver === 'won' ? gameWon : gameLost;
-  const endGameMessage = isGameOver === 'won' 
-    ? "Good job, yugi can feel his soul!"
-    : "Yugi is captured, keep trying!";
+  const endGameGif = isGameOver === 'won' ? gameWon : gameLost
+  const endGameMessage =
+    isGameOver === 'won'
+      ? 'Good job, yugi can feel his soul!'
+      : 'Yugi is captured, keep trying!'
 
-  const endGameClass = isGameOver === 'won' ? 'won' : 'lost';
+  const endGameClass = isGameOver === 'won' ? 'won' : 'lost'
 
-  // Sound controlling 
-  const [play, { stop, sound }] = useSound(gameMusic, {
+  // Sound controlling
+  const [play, { stop }] = useSound(gameMusic, {
     volume: musicIsMuted ? 0 : 0.6,
     loop: true,
-  });
-  
+  })
+
   function clickSound() {
-    if (!soundIsMuted) playClick();                
+    if (!soundIsMuted) playClick()
   }
-  
+
   function getYugiImage() {
     if (isGameOver === null) {
-      return yugiNormal;
-    } else if (isGameOver === "lost") {
-      return yugiFurious;
+      return yugiNormal
+    } else if (isGameOver === 'lost') {
+      return yugiFurious
     }
 
-    return yugiHappy;
+    return yugiHappy
   }
 
   function areVisibleCardsSelected(array) {
     for (let i = 0; i < cardsVisible; i++) {
       // there is a card visible not selected & array isnot undefined
       if (!array[i] || array[i].selected === false) {
-        return false;
+        return false
       }
     }
 
-    return true;
+    return true
   }
 
   // randomly shuffles the array (fisher-yates)
   function shuffleArray(array) {
-    const arr = [...array];
+    const arr = [...array]
     for (let i = 0; i < arr.length; i++) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(Math.random() * (i + 1))
 
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
     }
 
     if (areVisibleCardsSelected(arr)) {
-      return shuffleArray(arr);
-    };
+      return shuffleArray(arr)
+    }
 
-    return arr;
+    return arr
   }
 
   // flip all cards and return back changed
-  async function cardsFlip(id) {
-    setCardsStatus(prev =>
-      prev.map((card) => ({ ...card, flipped: true }))
-    )
+  async function cardsFlip() {
+    // Check if game was reset before continuing
+    if (abortControllerRef.current.signal.aborted) return
+
+    setCardsStatus(prev => prev.map(card => ({ ...card, flipped: true })))
 
     // wait for rotation animation
-    await new Promise(r => setTimeout(r, 700));
-    setCardsStatus((prev) => shuffleArray(prev));
+    await new Promise(r => setTimeout(r, 700))
+
+    if (abortControllerRef.current.signal.aborted) return
+
+    setCardsStatus(prev => shuffleArray(prev))
 
     // give some time for shuffling logic and loading images
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 200))
 
-    setCardsStatus(prev => 
-      prev.map((card) => ({ ...card, flipped: false }))
-    );
-  
+    if (abortControllerRef.current.signal.aborted) return
+
+    setCardsStatus(prev => prev.map(card => ({ ...card, flipped: false })))
   }
 
   // true if card is already selected (game over)
   function isCardSelected(array, id) {
-    return (array.some((obj) => obj.id === id && obj.selected));
+    return array.some(obj => obj.id === id && obj.selected)
   }
 
   // cards flipping animation, shuffling or ending game
   function handleCardSelect(id) {
-    if (isGameOver) return;
+    if (isGameOver) return
 
     if (isCardSelected(cardsStatus, id)) {
-      setGameMessage(lostMessage());
-      isGameOverRef.current = 'lost';
-      setIsGameOver('lost');
-      return;
+      setGameMessage(lostMessage())
+      isGameOverRef.current = 'lost'
+      setIsGameOver('lost')
+      return
     }
 
-    let updated = cardsStatus.map(card => (
-        card.id === id ? {...card, selected: true} : card
-      ));
+    let updated = cardsStatus.map(card =>
+      card.id === id ? { ...card, selected: true } : card
+    )
 
-    setCardsStatus(updated);
+    setCardsStatus(updated)
 
-    const isGameWon = updated.every(card => card.selected);
-    
+    const isGameWon = updated.every(card => card.selected)
+
     if (isGameWon) {
-      isGameOverRef.current = 'won';
-      setIsGameOver('won');
+      isGameOverRef.current = 'won'
+      setIsGameOver('won')
       setGameMessage(gameWonMessages())
-      return;
+      return
     }
 
-    cardsFlip(id);
-    setGameMessage(inGameMessage());
+    cardsFlip()
+    setGameMessage(inGameMessage())
   }
 
   // Music play/stop
   useEffect(() => {
-    play();
-    return () => stop();
-  }, [playClick, stop])
-  
+    play()
+    return () => stop()
+  }, [play, stop])
 
   // initialize cards (UI and status)
   useEffect(() => {
-    isGameOverRef.current = false;
-    setIsGameOver(null);
+    // Abort any pending animations from previous game
+    abortControllerRef.current.abort()
+    abortControllerRef.current = new AbortController()
+
+    isGameOverRef.current = false
+    setIsGameOver(null)
     // return unique arr of images with length passed
-      const randomImagesArr = getRandomImagesArr(cards);
-      const arr = new Array(cards);
-      // fill the array with card objs
-      for (let i = 0; i < cards; i++) {
-        arr[i] = {
-          imgUrl: randomImagesArr[i],
-          selected: false,
-          flipped: false,
-          id: crypto.randomUUID(),
-        };
+    const randomImagesArr = getRandomImagesArr(cards)
+    const arr = new Array(cards)
+    // fill the array with card objs
+    for (let i = 0; i < cards; i++) {
+      arr[i] = {
+        imgUrl: randomImagesArr[i],
+        selected: false,
+        flipped: false,
+        id: crypto.randomUUID(),
       }
-      
-      setCardsStatus(arr);
+    }
+
+    setCardsStatus(arr)
   }, [cards, resetCounter])
 
   // init yugi's message
   useEffect(() => {
-    setGameMessage(openingMessage());
+    setGameMessage(openingMessage())
   }, [resetCounter])
 
   return (
@@ -183,15 +191,18 @@ export default function Game({
       <header className="game-header">
         <div className="yugi-talks">
           <img src={getYugiImage()} />
-          <div style={{ color: isGameOver === 'lost' ? 'red' : 'var(--primary1-color)' }}>
-            <Typewriter 
+          <div
+            style={{
+              color: isGameOver === 'lost' ? 'red' : 'var(--primary1-color)',
+            }}
+          >
+            <Typewriter
               key={gameMessage}
               words={[gameMessage, '']}
               loop={1}
               cursor
               cursorStyle={
-                isGameOver === 'lost' ? "⭕" : 
-                isGameOver === 'won' ? "✨" : '_'
+                isGameOver === 'lost' ? '⭕' : isGameOver === 'won' ? '✨' : '_'
               }
               typeSpeed={30}
               deleteSpeed={40}
@@ -201,26 +212,28 @@ export default function Game({
         </div>
         <div className="controls">
           <div className="controls__navigate">
-            <button 
-              className="control-btn" 
+            <button
+              className="control-btn"
               onClick={() => {
-                handleRestart();
-                clickSound();
+                // Abort any pending animations immediately
+                abortControllerRef.current.abort()
+                abortControllerRef.current = new AbortController()
+                handleRestart()
+                clickSound()
               }}
               disabled={disabled}
             >
               Restart
             </button>
-            <button 
-              className="control-btn" 
+            <button
+              className="control-btn"
               onClick={() => window.location.reload()}
             >
               Main menu
-
             </button>
           </div>
           <div className="controls__sound">
-            <span className={soundIsMuted ? "music-muted" : ""}>
+            <span className={soundIsMuted ? 'music-muted' : ''}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -229,8 +242,8 @@ export default function Game({
                 stroke="currentColor"
                 className="music"
                 onClick={() => {
-                  setSoundIsMuted(prev => !prev);
-                  clickSound();
+                  setSoundIsMuted(prev => !prev)
+                  clickSound()
                 }}
               >
                 <path
@@ -240,7 +253,7 @@ export default function Game({
                 />
               </svg>
             </span>
-            <span className={musicIsMuted ? "music-muted" : ""}>
+            <span className={musicIsMuted ? 'music-muted' : ''}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -249,8 +262,8 @@ export default function Game({
                 stroke="currentColor"
                 className="music"
                 onClick={() => {
-                  setMusicIsMuted(prev => !prev);
-                  clickSound();
+                  setMusicIsMuted(prev => !prev)
+                  clickSound()
                 }}
               >
                 <path
@@ -260,7 +273,6 @@ export default function Game({
                 />
               </svg>
             </span>
-
           </div>
         </div>
         <div className="score">
@@ -274,37 +286,41 @@ export default function Game({
               <p className="score__label">Current</p>
               <p>0 / 7</p>
             </div>
-            </div>
+          </div>
         </div>
       </header>
 
       <main className="game-container">
         {cardsStatus?.slice(0, cardsVisible).map(card => (
-          <YugiCard 
+          <YugiCard
             key={card.id}
             imgUrl={card.imgUrl}
             flipped={card.flipped}
             isGameOverRef={isGameOverRef}
             onClick={() => handleCardSelect(card.id)}
           />
-        ))
-        }
+        ))}
 
-        {isGameOver && <div 
-            className={`gameEndWindow-wrapper ${endGameClass}`}
-          >
-          <p className={`end-game-sentence ${endGameClass}`}>
-            {endGameMessage}
-          </p>
-          <img src={endGameGif} className="game-end-gif" />
-          <button 
-            className="end-restart"
-            onClick={handleRestart}
-            disabled={disabled}
-          >
-            Restart
-          </button>
-        </div>}
+        {isGameOver && (
+          <div className={`gameEndWindow-wrapper ${endGameClass}`}>
+            <p className={`end-game-sentence ${endGameClass}`}>
+              {endGameMessage}
+            </p>
+            <img src={endGameGif} className="game-end-gif" />
+            <button
+              className="end-restart"
+              onClick={() => {
+                // Abort any pending animations immediately
+                abortControllerRef.current.abort()
+                abortControllerRef.current = new AbortController()
+                handleRestart()
+              }}
+              disabled={disabled}
+            >
+              Restart
+            </button>
+          </div>
+        )}
       </main>
     </div>
   )
